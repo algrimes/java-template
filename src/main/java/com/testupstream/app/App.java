@@ -1,6 +1,7 @@
 package com.testupstream.app;
 
 import com.testupstream.app.bundles.AppGuiceBundle;
+import com.testupstream.app.resources.HelloWorldResource;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
@@ -31,6 +32,6 @@ public class App extends Application<AppConfig> {
     }
 
     public List<Class> getResources() {
-        return Arrays.asList();
+        return Arrays.<Class>asList(HelloWorldResource.class);
     }
 }

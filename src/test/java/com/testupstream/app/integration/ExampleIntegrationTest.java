@@ -10,7 +10,7 @@ public class ExampleIntegrationTest extends IntegrationTestStepWrapper {
 
     @Test
     public void blah_should() throws Exception {
-        
+
     }
 
 }
