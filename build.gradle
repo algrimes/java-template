@@ -29,6 +29,7 @@ dependencies {
             "io.dropwizard:dropwizard-metrics-graphite:0.7.0-rc3",
             "com.google.inject:guice:3.0",
             "com.google.inject.extensions:guice-servlet:3.0",
+            "com.palominolabs.metrics:metrics-guice:3.0.2",
             "com.sun.jersey.contribs:jersey-guice:1.18.1"
 
     testCompile "junit:junit-dep:4.11",
