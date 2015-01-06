@@ -36,7 +36,9 @@ dependencies {
 
     testCompile "junit:junit-dep:4.11",
                 "org.mockito:mockito-core:1.9.5",
-                "io.dropwizard:dropwizard-testing:0.7.0-rc3"
+                "io.dropwizard:dropwizard-testing:0.7.0-rc3",
+                "com.thoughtworks.inproctester:jerseytester-webdriver:1.0.3",
+                "com.thoughtworks.inproctester:jerseytester-htmlunit:1.0.3"
 }
 
 fatJar {

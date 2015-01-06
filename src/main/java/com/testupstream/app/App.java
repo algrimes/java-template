@@ -2,6 +2,7 @@ package com.testupstream.app;
 
 import com.testupstream.app.bundles.AppGuiceBundle;
 import com.testupstream.app.resources.HelloWorldResource;
+import com.testupstream.app.routes.Urls;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
@@ -21,7 +22,7 @@ public class App extends Application<AppConfig> {
     public void initialize(Bootstrap<AppConfig> bootstrap) {
         bootstrap.addBundle(new ViewBundle());
         bootstrap.addBundle(new AppGuiceBundle());
-        bootstrap.addBundle(new AssetsBundle("/assets"));
+        bootstrap.addBundle(new AssetsBundle(Urls.ASSETS_PATH));
     }
 
     @Override

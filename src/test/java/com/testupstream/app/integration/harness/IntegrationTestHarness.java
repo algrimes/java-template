@@ -8,13 +8,17 @@ import com.google.inject.Stage;
 import com.google.inject.util.Modules;
 import com.testupstream.app.App;
 import com.testupstream.app.bundles.AppModule;
+import com.thoughtworks.inproctester.jerseytester.webdriver.JerseyClientHtmlunitDriver;
 import io.dropwizard.testing.junit.ResourceTestRule;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import static org.mockito.Mockito.mock;
 
 public class IntegrationTestHarness {
 
     private static IntegrationTestHarness harness;
+    private static WebDriver driver;
 
     //    setup mocks/stubs here
 
@@ -37,6 +41,14 @@ public class IntegrationTestHarness {
         return harness;
     }
 
+    public WebDriver getDriver() {
+        if (driver == null) {
+            driver = new JerseyClientHtmlunitDriver(getJersey().client());
+            ((HtmlUnitDriver) driver).setJavascriptEnabled(true);
+        }
+        return driver;
+    }
+
     public ResourceTestRule getJersey() {
         return jersey;
     }
@@ -51,6 +63,7 @@ public class IntegrationTestHarness {
 
     private ResourceTestRule setUpRule() {
         ResourceTestRule.Builder builder = new ResourceTestRule.Builder()
+                .addResource(injector.getInstance(StaticContentResource.class))
                 .addResource(new TestMessageBodyWriter());
         for (Class resource : new App().getResources()) {
             builder.addResource(injector.getInstance(resource));
