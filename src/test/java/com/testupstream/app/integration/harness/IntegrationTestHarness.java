@@ -1,19 +1,17 @@
 package com.testupstream.app.integration.harness;
 
-import com.google.inject.Binder;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Module;
 import com.google.inject.Stage;
 import com.google.inject.util.Modules;
 import com.testupstream.app.App;
 import com.testupstream.app.bundles.AppModule;
+import com.testupstream.app.providers.ResponseProvider;
+import com.testupstream.app.providers.TestResponseProvider;
 import com.thoughtworks.inproctester.jerseytester.webdriver.JerseyClientHtmlunitDriver;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-
-import static org.mockito.Mockito.mock;
 
 public class IntegrationTestHarness {
 
@@ -22,11 +20,8 @@ public class IntegrationTestHarness {
 
     //    setup mocks/stubs here
 
-    private final Injector injector = Guice.createInjector(Stage.PRODUCTION, Modules.override(new AppModule()).with(new Module() {
-        @Override
-        public void configure(Binder binder) {
-            // bind interfaces to mocks/stubs here
-        }
+    private final Injector injector = Guice.createInjector(Stage.PRODUCTION, Modules.override(new AppModule()).with(binder -> {
+        binder.bind(ResponseProvider.class).to(TestResponseProvider.class);
     }));
 
     private final ResourceTestRule jersey = setUpRule();
@@ -62,6 +57,7 @@ public class IntegrationTestHarness {
     }
 
     private ResourceTestRule setUpRule() {
+
         ResourceTestRule.Builder builder = new ResourceTestRule.Builder()
                 .addResource(injector.getInstance(StaticContentResource.class))
                 .addResource(new TestMessageBodyWriter());

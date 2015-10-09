@@ -1,6 +1,8 @@
 package com.testupstream.app;
 
-import com.testupstream.app.bundles.AppGuiceBundle;
+import com.hubspot.dropwizard.guice.GuiceBundle;
+import com.palominolabs.metrics.guice.MetricsInstrumentationModule;
+import com.testupstream.app.bundles.AppModule;
 import com.testupstream.app.resources.HelloWorldResource;
 import com.testupstream.app.routes.Urls;
 import io.dropwizard.Application;
@@ -20,9 +22,18 @@ public class App extends Application<AppConfig> {
 
     @Override
     public void initialize(Bootstrap<AppConfig> bootstrap) {
-        bootstrap.addBundle(new ViewBundle());
-        bootstrap.addBundle(new AppGuiceBundle());
+        bootstrap.addBundle(new ViewBundle<>());
+
         bootstrap.addBundle(new AssetsBundle(Urls.ASSETS_PATH));
+
+        GuiceBundle<AppConfig> guiceBundle = GuiceBundle.<AppConfig>newBuilder()
+                .addModule(new AppModule())
+                .addModule(new MetricsInstrumentationModule(bootstrap.getMetricRegistry()))
+                .setConfigClass(AppConfig.class)
+                .build();
+
+        bootstrap.addBundle(guiceBundle);
+
     }
 
     @Override

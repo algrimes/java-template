@@ -18,7 +18,7 @@ public class ExampleIntegrationTest extends IntegrationTestStepWrapper {
     @Test
     public void homepageShouldHaveHelloWorld() throws Exception {
         getHarness().getDriver().get(JERSEY_HOST + "/");
-        assertThat(getHarness().getDriver().findElement(By.tagName("h1")).getText(), is("Hello, World!"));
+        assertThat(getHarness().getDriver().findElement(By.tagName("h1")).getText(), is("Goodbye, World!"));
     }
 
 }

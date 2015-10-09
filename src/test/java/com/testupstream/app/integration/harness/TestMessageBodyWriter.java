@@ -1,9 +1,9 @@
 package com.testupstream.app.integration.harness;
 
-import com.sun.jersey.spi.service.ServiceFinder;
 import io.dropwizard.views.View;
 import io.dropwizard.views.ViewRenderException;
 import io.dropwizard.views.ViewRenderer;
+import org.glassfish.jersey.internal.ServiceFinder;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
