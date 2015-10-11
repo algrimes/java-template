@@ -2,15 +2,15 @@ package com.testupstream.app.time;
 
 import org.joda.time.DateTime;
 
-public class DateTimeFactory {
+public class TestDateTime implements DateTimeProvider {
 
     private static DateTime date;
 
-    public static void freezeTime(DateTime dateTime) {
+    public void freezeTime(DateTime dateTime) {
         date = dateTime;
     }
 
-    public static DateTime now() {
+    public DateTime now() {
         return date != null ? date : DateTime.now();
     }
 

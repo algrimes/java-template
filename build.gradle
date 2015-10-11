@@ -36,8 +36,8 @@ dependencies {
     testCompile "junit:junit-dep:4.11",
                 "org.mockito:mockito-core:1.9.5",
                 "io.dropwizard:dropwizard-testing:0.9.0-rc3",
-                fileTree(dir: './lib', include: '*.jar'),
-                "org.seleniumhq.selenium:selenium-htmlunit-driver:2.48.1"
+                "com.thoughtworks.inproctester:jerseytester-webdriver:1.1.0",
+                "com.thoughtworks.inproctester:jerseytester-htmlunit:1.1.0"
 
 }
 

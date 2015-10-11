@@ -8,6 +8,8 @@ import com.testupstream.app.App;
 import com.testupstream.app.bundles.AppModule;
 import com.testupstream.app.providers.ResponseProvider;
 import com.testupstream.app.providers.TestResponseProvider;
+import com.testupstream.app.time.DateTimeProvider;
+import com.testupstream.app.time.TestDateTime;
 import com.thoughtworks.inproctester.jerseytester.webdriver.JerseyClientHtmlunitDriver;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.openqa.selenium.WebDriver;
@@ -22,6 +24,8 @@ public class IntegrationTestHarness {
 
     private final Injector injector = Guice.createInjector(Stage.PRODUCTION, Modules.override(new AppModule()).with(binder -> {
         binder.bind(ResponseProvider.class).to(TestResponseProvider.class);
+        binder.bind(DateTimeProvider.class).to(TestDateTime.class);
+
     }));
 
     private final ResourceTestRule jersey = setUpRule();
