@@ -3,10 +3,13 @@ package com.testupstream.app;
 import com.hubspot.dropwizard.guice.GuiceBundle;
 import com.palominolabs.metrics.guice.MetricsInstrumentationModule;
 import com.testupstream.app.bundles.AppModule;
+import com.testupstream.app.bundles.ConfigurationBundle;
 import com.testupstream.app.resources.HelloWorldResource;
 import com.testupstream.app.routes.Urls;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
+import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
+import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
@@ -25,6 +28,7 @@ public class App extends Application<AppConfig> {
         bootstrap.addBundle(new ViewBundle<>());
 
         bootstrap.addBundle(new AssetsBundle(Urls.ASSETS_PATH));
+        bootstrap.addBundle(new ConfigurationBundle());
 
         GuiceBundle<AppConfig> guiceBundle = GuiceBundle.<AppConfig>newBuilder()
                 .addModule(new AppModule())
@@ -33,6 +37,8 @@ public class App extends Application<AppConfig> {
                 .build();
 
         bootstrap.addBundle(guiceBundle);
+
+        bootstrap.setConfigurationSourceProvider(new SubstitutingSourceProvider(bootstrap.getConfigurationSourceProvider(), new EnvironmentVariableSubstitutor(false)));
 
     }
 

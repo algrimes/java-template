@@ -1,2 +1,4 @@
 server:
   type: default
+
+my-variable: ${AN_ENVIRONMENT_VARIABLE:-defaultvalue}
