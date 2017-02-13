@@ -4,6 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Stage;
 import com.google.inject.util.Modules;
+import com.squarespace.jersey2.guice.JerseyGuiceUtils;
 import com.testupstream.app.App;
 import com.testupstream.app.bundles.AppModule;
 import com.testupstream.app.providers.ResponseProvider;
@@ -48,7 +49,7 @@ public class IntegrationTestHarness {
         return driver;
     }
 
-    public ResourceTestRule getJersey() {
+    ResourceTestRule getJersey() {
         return jersey;
     }
 
@@ -68,6 +69,9 @@ public class IntegrationTestHarness {
         for (Class resource : new App().getResources()) {
             builder.addResource(injector.getInstance(resource));
         }
+
+        JerseyGuiceUtils.reset(); //Because of https://github.com/HubSpot/dropwizard-guice/issues/95
+
         return builder.build();
     }
 }
