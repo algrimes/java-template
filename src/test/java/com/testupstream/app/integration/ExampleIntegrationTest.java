@@ -1,24 +1,29 @@
 package com.testupstream.app.integration;
 
-import com.testupstream.app.integration.harness.IntegrationTestRunner;
-import com.testupstream.app.integration.steps.IntegrationTestStepWrapper;
+import com.testupstream.app.integration.steps.IntegrationTests;
+import com.testupstream.app.providers.ResponseProvider;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 
-import static com.testupstream.app.integration.harness.IntegrationTestHarness.getHarness;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
-@RunWith(IntegrationTestRunner.class)
-public class ExampleIntegrationTest extends IntegrationTestStepWrapper {
 
-    private static final String JERSEY_HOST = "http://localhost:9998";
+public class ExampleIntegrationTest extends IntegrationTests {
 
     @Test
-    public void homepageShouldHaveHelloWorld() throws Exception {
-        getHarness().getDriver().get(JERSEY_HOST + "/");
-        assertThat(getHarness().getDriver().findElement(By.tagName("h1")).getText(), is("Goodbye, World!"));
+    public void homepageShouldDisplayWhateverIChoose() throws Exception {
+        validateInProcessMocking("messageOne");
+        validateInProcessMocking("messageTwo");
+    }
+
+    private void validateInProcessMocking(String message) {
+        when(injector.getInstance(ResponseProvider.class).get()).thenReturn(message);
+
+        driver.get("http://localhost:9998/");
+
+        assertThat(driver.findElement(By.tagName("body")).getText(), is(message));
     }
 
 }

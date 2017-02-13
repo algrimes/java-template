@@ -8,7 +8,6 @@ import com.squarespace.jersey2.guice.JerseyGuiceUtils;
 import com.testupstream.app.App;
 import com.testupstream.app.bundles.AppModule;
 import com.testupstream.app.providers.ResponseProvider;
-import com.testupstream.app.providers.TestResponseProvider;
 import com.testupstream.app.time.DateTimeProvider;
 import com.testupstream.app.time.TestDateTime;
 import com.thoughtworks.inproctester.jerseytester.webdriver.JerseyClientHtmlunitDriver;
@@ -16,62 +15,53 @@ import io.dropwizard.testing.junit.ResourceTestRule;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
+import static org.mockito.Mockito.mock;
+
 public class IntegrationTestHarness {
 
-    private static IntegrationTestHarness harness;
-    private static WebDriver driver;
+    private WebDriver driver = null;
+    private ResourceTestRule rule;
+    private Injector injector;
 
-    //    setup mocks/stubs here
-
-    private final Injector injector = Guice.createInjector(Stage.PRODUCTION, Modules.override(new AppModule()).with(binder -> {
-        binder.bind(ResponseProvider.class).to(TestResponseProvider.class);
-        binder.bind(DateTimeProvider.class).to(TestDateTime.class);
-
-    }));
-
-    private final ResourceTestRule jersey = setUpRule();
-
-    private IntegrationTestHarness() {}
-
-
-    public static IntegrationTestHarness getHarness() {
-        if(harness == null) {
-            harness = new IntegrationTestHarness();
-        }
-        return harness;
-    }
-
-    public WebDriver getDriver() {
-        if (driver == null) {
-            driver = new JerseyClientHtmlunitDriver(getJersey().client());
-            ((HtmlUnitDriver) driver).setJavascriptEnabled(true);
-        }
-        return driver;
-    }
-
-    ResourceTestRule getJersey() {
-        return jersey;
+    private IntegrationTestHarness(final ResourceTestRule rule, final Injector injector) {
+        this.rule = rule;
+        this.injector = injector;
     }
 
     public Injector getInjector() {
-        return injector;
+        return this.injector;
     }
 
-    public Object clone() throws CloneNotSupportedException {
-        throw new CloneNotSupportedException();
+
+    public WebDriver getDriver() {
+        if (driver == null) {
+            driver = new JerseyClientHtmlunitDriver(rule.client());
+        }
+        return this.driver;
     }
 
-    private ResourceTestRule setUpRule() {
+    public ResourceTestRule getRule() {
+        return rule;
+    }
 
-        ResourceTestRule.Builder builder = new ResourceTestRule.Builder()
-                .addResource(injector.getInstance(StaticContentResource.class))
-                .addResource(new TestMessageBodyWriter());
+    public static IntegrationTestHarness build() {
+
+        Injector injector = Guice.createInjector(Stage.PRODUCTION, Modules.override(new AppModule()).with(binder -> {
+            binder.bind(ResponseProvider.class).toInstance(mock(ResponseProvider.class));
+            binder.bind(DateTimeProvider.class).to(TestDateTime.class);
+
+        }));
+
+        ResourceTestRule.Builder builder = new ResourceTestRule.Builder();
+
         for (Class resource : new App().getResources()) {
             builder.addResource(injector.getInstance(resource));
         }
 
         JerseyGuiceUtils.reset(); //Because of https://github.com/HubSpot/dropwizard-guice/issues/95
 
-        return builder.build();
+        ResourceTestRule rule = builder.build();
+
+        return new IntegrationTestHarness(rule, injector);
     }
 }
