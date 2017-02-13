@@ -19,11 +19,9 @@ public class ExampleIntegrationTest extends IntegrationTests {
     }
 
     private void validateInProcessMocking(String message) {
-        when(injector.getInstance(ResponseProvider.class).get()).thenReturn(message);
-
-        driver.get("http://localhost:9998/");
-
-        assertThat(driver.findElement(By.tagName("body")).getText(), is(message));
+        given.theHomePageResponseIs(message);
+        when.theHomepageIsVisited();
+        assertThat(then.homepageText(), is(message));
     }
 
 }
